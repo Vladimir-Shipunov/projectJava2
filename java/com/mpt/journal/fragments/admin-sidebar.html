@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+    <aside style="background: #1c1c1c; padding: 20px; border-radius: 8px; height: fit-content;">
+        <h3 style="margin-bottom: 20px; color: #3498db;">Меню администратора</h3>
+        
+        <nav style="display: flex; flex-direction: column; gap: 10px;">
+            <a href="/admin" class="btn" 
+               th:classappend="${#httpServletRequest.requestURI == '/admin'} ? 'btn-primary' : 'btn-secondary'"
+               style="text-align: left; justify-content: start;">
+                📊 Дашборд
+            </a>
+            
+            <a href="/admin/products" class="btn" 
+               th:classappend="${#httpServletRequest.requestURI.startsWith('/admin/products')} ? 'btn-primary' : 'btn-secondary'"
+               style="text-align: left; justify-content: start;">
+                🛍️ Товары
+            </a>
+            
+            <a href="/admin/orders" class="btn" 
+               th:classappend="${#httpServletRequest.requestURI.startsWith('/admin/orders')} ? 'btn-primary' : 'btn-secondary'"
+               style="text-align: left; justify-content: start;">
+                📦 Заказы
+            </a>
+            
+            <a href="/admin/users" class="btn" 
+               th:classappend="${#httpServletRequest.requestURI.startsWith('/admin/users')} ? 'btn-primary' : 'btn-secondary'"
+               style="text-align: left; justify-content: start;">
+                👥 Пользователи
+            </a>
+            
+            <a href="/admin/categories" class="btn" 
+               th:classappend="${#httpServletRequest.requestURI.startsWith('/admin/categories')} ? 'btn-primary' : 'btn-secondary'"
+               style="text-align: left; justify-content: start;">
+                📁 Категории
+            </a>
+            
+            <a href="/admin/manufacturers" class="btn" 
+               th:classappend="${#httpServletRequest.requestURI.startsWith('/admin/manufacturers')} ? 'btn-primary' : 'btn-secondary'"
+               style="text-align: left; justify-content: start;">
+                🏭 Производители
+            </a>
+            
+            <a href="/admin/deliveries" class="btn" 
+               th:classappend="${#httpServletRequest.requestURI.startsWith('/admin/deliveries')} ? 'btn-primary' : 'btn-secondary'"
+               style="text-align: left; justify-content: start;">
+                🚚 Доставка
+            </a>
+        </nav>
+    </aside>
+</body>
+</html>
