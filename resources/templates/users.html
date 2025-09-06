@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Пользователи</title>
+  <link rel="stylesheet" href="/index.css">
+</head>
+<body style="background-color: #111; color: white;">
+
+<header style="background-color: #162b40; padding: 20px; text-align: center;">
+  <h1>Управление пользователями</h1>
+  <nav>
+    <a href="/" class="btn btn-primary">Главная</a>
+  </nav>
+</header>
+
+<div class="container">
+
+  <section class="search-form">
+    <h2>Поиск пользователей</h2>
+    <form action="/users/search" method="get">
+      <select name="searchType" required>
+        <option value="id">По ID</option>
+        <option value="name">По имени</option>
+        <option value="email">По email</option>
+        <option value="role">По роли</option>
+      </select>
+      <input type="text" name="searchValue" placeholder="Введите значение">
+      <button class="btn btn-primary" type="submit">Найти</button>
+      <a href="/users" class="btn btn-warning">Сбросить</a>
+    </form>
+  </section>
+
+  <section class="add-form">
+    <h2>Добавить пользователя</h2>
+    <form action="/users/add" method="post">
+      <input type="text" name="name" placeholder="Имя" required>
+      <input type="email" name="email" placeholder="Email" required>
+
+      <select name="passportId" class="form-select" required>
+        <option value="">Выберите паспорт</option>
+        <option th:each="p : ${passports}" th:value="${p.id}"
+                th:text="${p.ownerName + ' / ' + p.passportNumber}"></option>
+      </select>
+
+      <select name="roleId" class="form-select" required>
+        <option value="">Выберите роль</option>
+        <option th:each="r : ${roles}" th:value="${r.id}" th:text="${r.name}"></option>
+      </select>
+
+      <button class="btn btn-success" type="submit">Добавить</button>
+    </form>
+  </section>
+
+  <section class="user-list">
+    <h2>Список пользователей</h2>
+
+    <div th:if="${users.size() == 0}">
+      <p>Нет пользователей для отображения.</p>
+    </div>
+
+    <div th:if="${users.size() > 0}" style="display: flex; flex-wrap: wrap; gap: 20px;">
+      <div th:each="u : ${users}" class="card" style="background: #1c1c1c; border-radius: 8px; padding: 15px; width: 300px;">
+        <p><strong>ID:</strong> [[${u.id}]]</p>
+        <p><strong>Имя:</strong> [[${u.name}]]</p>
+        <p><strong>Email:</strong> [[${u.email}]]</p>
+        <p><strong>Паспорт:</strong>
+          <span th:if="${u.passport != null}">[[${u.passport.ownerName}]] ([[${u.passport.passportNumber}]])</span>
+          <span th:if="${u.passport == null}">-</span>
+        </p>
+        <p><strong>Роль:</strong>
+          <span th:if="${u.role != null}">[[${u.role.name}]]</span>
+          <span th:if="${u.role == null}">-</span>
+        </p>
+
+
+        <form action="/users/update" method="post" style="margin-top: 10px;">
+          <input type="hidden" name="id" th:value="${u.id}" />
+          <input type="text" name="name" th:value="${u.name}" placeholder="Имя" required />
+          <input type="email" name="email" th:value="${u.email}" placeholder="Email" required />
+
+          <select name="passportId" class="form-select" required>
+            <option value="">Выберите паспорт</option>
+            <option th:each="p : ${passports}" th:value="${p.id}"
+                    th:text="${p.ownerName + ' / ' + p.passportNumber}"
+                    th:selected="${u.passport != null} ? ${p.id} == ${u.passport.id} : false"></option>
+          </select>
+
+          <select name="roleId" class="form-select" required>
+            <option value="">Выберите роль</option>
+            <option th:each="r : ${roles}" th:value="${r.id}"
+                    th:text="${r.name}"
+                    th:selected="${u.role != null} ? ${r.id} == ${u.role.id} : false"></option>
+          </select>
+
+          <button class="btn btn-warning" type="submit">Обновить</button>
+        </form>
+
+
+        <form action="/users/delete" method="post" style="margin-top: 5px;">
+          <input type="hidden" name="id" th:value="${u.id}" />
+          <button class="btn btn-danger" type="submit">Удалить</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer style="background-color: #162b40; padding: 20px; margin-top: 40px; text-align: center;">
+  <h2>Контакты</h2>
+  <p>Телефон: +7 (983) 101 8435</p>
+  <p>Адрес: г. Барнаул, ул. Просторная, д. 228</p>
+  <p>Email: lsip_v.s.shipunov@mpt.ru</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Редактирование товара</title>
+    <link rel="stylesheet" href="/index.css">
+</head>
+<body style="background-color: #111; color: white;">
+
+<header style="background-color: #162b40; padding: 20px;">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h1>Редактирование товара</h1>
+        <nav style="display: flex; gap: 15px;">
+            <a href="/admin/products" class="btn btn-primary">← Назад к товарам</a>
+            <a href="/admin" class="btn btn-secondary">Главная</a>
+        </nav>
+    </div>
+</header>
+
+<div class="container">
+    <div style="max-width: 800px; margin: 30px auto;">
+        <!-- Форма редактирования -->
+        <div style="background: #1c1c1c; padding: 30px; border-radius: 8px;">
+            <h3 style="margin-bottom: 25px;">Редактировать товар</h3>
+            
+            <!-- Текущее изображение -->
+            <div th:if="${product.image != null}" style="text-align: center; margin-bottom: 25px;">
+                <img th:src="'/shop/product/image/' + ${product.id}" 
+                     style="max-width: 300px; max-height: 300px; border-radius: 8px;">
+                <div style="margin-top: 15px;">
+                    <label>
+                        <input type="checkbox" name="removeImage" value="true">
+                        Удалить текущее изображение
+                    </label>
+                </div>
+            </div>
+            
+            <form th:action="@{/admin/products/update}" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="id" th:value="${product.id}">
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                    <div>
+                        <label>Название товара *</label>
+                        <input type="text" name="name" th:value="${product.name}" class="form-input" required>
+                    </div>
+                    
+                    <div>
+                        <label>Цена *</label>
+                        <input type="number" step="0.01" name="price" th:value="${product.price}" class="form-input" required>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 20px;">
+                    <label>Описание *</label>
+                    <textarea name="description" class="form-input" rows="4" required
+                              th:text="${product.description}"></textarea>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                    <div>
+                        <label>Категория *</label>
+                        <select name="categoryId" class="form-select" required>
+                            <option value="">Выберите категорию</option>
+                            <option th:each="cat : ${categories}" 
+                                    th:value="${cat.id}" 
+                                    th:text="${cat.name}"
+                                    th:selected="${product.category != null} ? ${cat.id} == ${product.category.id} : false">
+                            </option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label>Производитель *</label>
+                        <select name="manufacturerId" class="form-select" required>
+                            <option value="">Выберите производителя</option>
+                            <option th:each="man : ${manufacturers}" 
+                                    th:value="${man.id}" 
+                                    th:text="${man.name}"
+                                    th:selected="${product.manufacturer != null} ? ${man.id} == ${product.manufacturer.id} : false">
+                            </option>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 25px;">
+                    <label>Новое изображение товара</label>
+                    <input type="file" name="image" accept="image/*" class="form-input">
+                    <small style="color: #ccc;">Максимальный размер: 10MB. Поддерживаемые форматы: JPG, PNG, GIF</small>
+                </div>
+
+                <div style="display: flex; gap: 15px;">
+                    <button type="submit" class="btn btn-success">Сохранить изменения</button>
+                    <a href="/admin/products" class="btn btn-warning">Отмена</a>
+                    <form th:action="@{/admin/products/delete}" method="post" style="display: inline;">
+                        <input type="hidden" name="id" th:value="${product.id}">
+                        <button type="submit" class="btn btn-danger" 
+                                onclick="return confirm('Удалить этот товар?')">Удалить товар</button>
+                    </form>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<footer style="background-color: #162b40; padding: 20px; margin-top: 40px; text-align: center;">
+    <p>Админ-панель • [[${@authService.getCurrentUser().name}]]</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Оформление заказа</title>
+    <link rel="stylesheet" href="/index.css">
+</head>
+<body style="background-color: #111; color: white;">
+
+<header style="background-color: #162b40; padding: 20px;">
+    <nav style="display: flex; justify-content: space-between; align-items: center;">
+        <a href="/shop/cart" class="btn btn-primary">← Назад в корзину</a>
+        <h1>Оформление заказа</h1>
+    </nav>
+</header>
+
+<div class="container">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin: 40px 0;">
+        <!-- Форма заказа -->
+        <div>
+            <h2>Данные для заказа</h2>
+            
+            <form th:action="@{/shop/order/create}" method="post" style="background: #1c1c1c; padding: 25px; border-radius: 8px;">
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px;">ФИО *</label>
+                    <input type="text" name="customerName" th:value="${user.name}" 
+                           class="form-input" required>
+                </div>
+                
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px;">Телефон *</label>
+                    <input type="tel" name="phone" placeholder="+7 (999) 999-99-99" 
+                           class="form-input" required>
+                </div>
+                
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px;">Адрес доставки *</label>
+                    <textarea name="deliveryAddress" placeholder="Полный адрес доставки" 
+                              class="form-input" rows="3" required></textarea>
+                </div>
+                
+                <div style="margin-bottom: 25px;">
+                    <label style="display: block; margin-bottom: 8px;">Способ доставки</label>
+                    <select name="deliveryId" class="form-select" required>
+                        <option value="">Выберите способ доставки</option>
+                        <option th:each="delivery : ${deliveries}" 
+                                th:value="${delivery.id}"
+                                th:text="${delivery.type + ' - ' + delivery.cost + ' ₽'}">
+                        </option>
+                    </select>
+                </div>
+                
+                <div style="margin-bottom: 25px;">
+                    <label style="display: block; margin-bottom: 8px;">Способ оплаты</label>
+                    <select name="paymentType" class="form-select" required>
+                        <option value="CARD">Банковская карта</option>
+                        <option value="CASH">Наличные при получении</option>
+                        <option value="ONLINE">Онлайн-оплата</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-success" style="width: 100%;">
+                    Подтвердить заказ
+                </button>
+            </form>
+        </div>
+
+        <!-- Информация о заказе -->
+        <div>
+            <h2>Ваш заказ</h2>
+            
+            <div style="background: #1c1c1c; padding: 25px; border-radius: 8px; margin-bottom: 20px;">
+                <div th:each="item : ${cartItems}" style="display: flex; justify-content: space-between; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid #333;">
+                    <div>
+                        <span th:text="${item.product.name}"></span>
+                        <span style="color: #ccc; font-size: 0.9em;">× [[${item.quantity}]]</span>
+                    </div>
+                    <div th:text="${#numbers.formatDecimal(item.product.price * item.quantity, 1, 2) + ' ₽'}"></div>
+                </div>
+                
+                <div style="margin-top: 20px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                        <span>Товары:</span>
+                        <span th:text="${#numbers.formatDecimal(total, 1, 2) + ' ₽'}"></span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                        <span>Доставка:</span>
+                        <span id="deliveryCost">0 ₽</span>
+                    </div>
+                    <hr style="border-color: #333; margin: 15px 0;">
+                    <div style="display: flex; justify-content: space-between; font-size: 1.2em;">
+                        <strong>Итого:</strong>
+                        <strong id="finalTotal" th:text="${#numbers.formatDecimal(total, 1, 2) + ' ₽'}"></strong>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="background: #2c3e50; padding: 20px; border-radius: 8px;">
+                <h3 style="margin-bottom: 15px;">Гарантии</h3>
+                <ul style="color: #ccc; line-height: 1.6;">
+                    <li>Безопасная оплата</li>
+                    <li>Гарантия возврата</li>
+                    <li>Быстрая доставка</li>
+                    <li>Поддержка 24/7</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const deliverySelect = document.querySelector('select[name="deliveryId"]');
+    const deliveryCost = document.getElementById('deliveryCost');
+    const finalTotal = document.getElementById('finalTotal');
+    const baseTotal = [[$,{total}]];
+
+    deliverySelect.addEventListener('change', function() {
+        const selectedOption = this.options[this.selectedIndex];
+        if (selectedOption.value) {
+            const deliveryText = selectedOption.text;
+            const costMatch = deliveryText.match(/(\d+\.?\d*) ₽/);
+            
+            if (costMatch) {
+                const cost = parseFloat(costMatch[1]);
+                deliveryCost.textContent = cost.toFixed(2) + ' ₽';
+                finalTotal.textContent = (baseTotal + cost).toFixed(2) + ' ₽';
+            }
+        } else {
+            deliveryCost.textContent = '0 ₽';
+            finalTotal.textContent = baseTotal.toFixed(2) + ' ₽';
+        }
+    });
+});
+</script>
+
+<footer style="background-color: #162b40; padding: 20px; margin-top: 40px; text-align: center;">
+    <h2>Контакты</h2>
+    <p>Телефон: +7 (983) 101 8435</p>
+    <p>Адрес: г. Барнаул ул. Просторная д.228</p>
+    <p>Email: lsip_v.s.shipunov@mpt.ru</p>
+</footer>
+
+</body>
+</html>

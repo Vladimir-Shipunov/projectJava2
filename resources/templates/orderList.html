@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Заказы</title>
+  <link rel="stylesheet" href="/index.css">
+</head>
+<body style="background-color: #111; color: white;">
+
+<header style="background-color: #162b40; padding: 20px; text-align: center;">
+  <h1>Управление заказами</h1>
+  <nav>
+    <a href="/" class="btn btn-primary">Главная</a>
+  </nav>
+</header>
+
+<div class="container">
+
+  <section class="search-form">
+    <h2>Поиск заказов</h2>
+    <form action="/orders/search" method="get">
+      <select name="searchType" required>
+        <option value="id">По ID</option>
+        <option value="customerName">По имени клиента</option>
+        <option value="phone">По телефону</option>
+        <option value="deliveryAddress">По адресу</option>
+        <option value="total">По сумме</option>
+      </select>
+      <input type="text" name="searchValue" placeholder="Введите значение">
+      <button class="btn btn-primary" type="submit">Найти</button>
+      <a href="/orders" class="btn btn-warning">Сбросить</a>
+    </form>
+  </section>
+
+  <section class="add-form">
+    <h2>Добавить заказ</h2>
+    <form action="/orders/add" method="post">
+      <input type="text" name="customerName" placeholder="Имя клиента" required>
+      <input type="text" name="phone" placeholder="Телефон" required>
+      <input type="text" name="deliveryAddress" placeholder="Адрес доставки" required>
+      <input type="number" step="0.01" name="total" placeholder="Сумма" required>
+
+      <select name="userId" class="form-select" required>
+        <option value="">Выберите пользователя</option>
+        <option th:each="u : ${users}" th:value="${u.id}" th:text="${u.name}"></option>
+      </select>
+
+      <select name="deliveryId" class="form-select" required>
+        <option value="">Выберите способ доставки</option>
+        <option th:each="d : ${deliveries}" th:value="${d.id}" th:text="${d.type}"></option>
+      </select>
+
+      <button class="btn btn-success" type="submit">Добавить</button>
+    </form>
+  </section>
+
+  <section class="order-list">
+    <h2>Список заказов</h2>
+
+    <div style="display: flex; flex-wrap: wrap; gap: 20px;">
+      <div th:each="o : ${orders}" class="card" style="background: #1c1c1c; border-radius: 8px; padding: 15px; width: 300px;">
+        <p><strong>ID:</strong> [[${o.id}]]</p>
+        <p><strong>Клиент:</strong> [[${o.customerName}]]</p>
+        <p><strong>Телефон:</strong> [[${o.phone}]]</p>
+        <p><strong>Адрес:</strong> [[${o.deliveryAddress}]]</p>
+        <p><strong>Сумма:</strong> [[${#numbers.formatDecimal(o.total, 1, 2)}]] ₽</p>
+        <p><strong>Пользователь:</strong> [[${o.user.name}]]</p>
+        <p><strong>Доставка:</strong> [[${o.delivery.type}]]</p>
+
+        <form action="/orders/update" method="post" style="margin-top: 10px;">
+          <input type="hidden" name="id" th:value="${o.id}"/>
+          <input type="text" name="customerName" th:value="${o.customerName}" placeholder="Имя клиента" required/>
+          <input type="text" name="phone" th:value="${o.phone}" placeholder="Телефон" required/>
+          <input type="text" name="deliveryAddress" th:value="${o.deliveryAddress}" placeholder="Адрес" required/>
+          <input type="number" step="0.01" name="total" th:value="${o.total}" placeholder="Сумма" required/>
+
+          <select name="userId" class="form-select" required>
+            <option th:each="u : ${users}" th:value="${u.id}" th:text="${u.name}"
+                    th:selected="${o.user != null} ? ${u.id} == ${o.user.id} : false"></option>
+          </select>
+
+          <select name="deliveryId" class="form-select" required>
+            <option th:each="d : ${deliveries}" th:value="${d.id}" th:text="${d.type}"
+                    th:selected="${o.delivery != null} ? ${d.id} == ${o.delivery.id} : false"></option>
+          </select>
+
+          <button class="btn btn-warning" type="submit">Обновить</button>
+        </form>
+
+        <form action="/orders/delete" method="post" style="margin-top: 5px;">
+          <input type="hidden" name="id" th:value="${o.id}"/>
+          <button class="btn btn-danger" type="submit">Удалить</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer style="background-color: #162b40; padding: 20px; margin-top: 40px; text-align: center;">
+  <h2>Контакты</h2>
+  <p>Телефон: +7 (983) 101 8435</p>
+  <p>Адрес: г. Барнаул ул. Просторная д.228</p>
+  <p>Email: lsip_v.s.shipunov@mpt.ru</p>
+</footer>
+
+</body>
+</html>

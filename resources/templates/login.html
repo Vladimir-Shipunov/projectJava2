@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход в систему</title>
+    <link rel="stylesheet" href="/index.css">
+</head>
+<body style="background-color: #111; color: white;">
+
+<div style="max-width: 400px; margin: 100px auto; padding: 20px;">
+    <div style="background: #1c1c1c; padding: 30px; border-radius: 10px; text-align: center;">
+        <h2 style="margin-bottom: 30px;">Вход в систему</h2>
+        
+        <div th:if="${param.error}" style="color: #e74c3c; margin-bottom: 20px;">
+            Неверное имя пользователя или пароль
+        </div>
+        
+        <div th:if="${param.registered}" style="color: #2ecc71; margin-bottom: 20px;">
+            Регистрация успешна! Теперь вы можете войти.
+        </div>
+
+        <form th:action="@{/login}" method="post">
+            <div style="margin-bottom: 20px;">
+                <input type="text" name="username" placeholder="Имя пользователя" 
+                       class="form-input" required>
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+                <input type="password" name="password" placeholder="Пароль" 
+                       class="form-input" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%;">
+                Войти
+            </button>
+        </form>
+
+        <div style="margin-top: 20px;">
+            <p>Нет аккаунта? <a href="/register" style="color: #3498db;">Зарегистрироваться</a></p>
+            <p><a href="/shop" style="color: #ccc;">← Вернуться в магазин</a></p>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

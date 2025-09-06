@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация</title>
+    <link rel="stylesheet" href="/index.css">
+</head>
+<body style="background-color: #111; color: white;">
+
+<div style="max-width: 500px; margin: 50px auto; padding: 20px;">
+    <div style="background: #1c1c1c; padding: 30px; border-radius: 10px;">
+        <h2 style="text-align: center; margin-bottom: 30px;">Регистрация</h2>
+        
+        <div th:if="${error}" style="color: #e74c3c; margin-bottom: 20px; padding: 10px; background: #2c2c2c; border-radius: 5px;">
+            <span th:text="${error}"></span>
+        </div>
+
+        <form th:action="@{/register}" method="post">
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; margin-bottom: 5px;">Имя пользователя *</label>
+                <input type="text" name="username" placeholder="Придумайте логин" 
+                       class="form-input" required minlength="3">
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; margin-bottom: 5px;">Email *</label>
+                <input type="email" name="email" placeholder="Ваш email" 
+                       class="form-input" required>
+            </div>
+
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; margin-bottom: 5px;">Имя *</label>
+                <input type="text" name="name" placeholder="Ваше имя" 
+                       class="form-input" required>
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; margin-bottom: 5px;">Пароль *</label>
+                <input type="password" name="password" placeholder="Придумайте пароль" 
+                       class="form-input" required minlength="6">
+            </div>
+            
+            <div style="margin-bottom: 25px;">
+                <label style="display: block; margin-bottom: 5px;">Подтверждение пароля *</label>
+                <input type="password" name="confirmPassword" placeholder="Повторите пароль" 
+                       class="form-input" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; margin-bottom: 20px;">
+                Зарегистрироваться
+            </button>
+        </form>
+
+        <div style="text-align: center;">
+            <p>Уже есть аккаунт? <a href="/login" style="color: #3498db;">Войти</a></p>
+            <p><a href="/shop" style="color: #ccc;">← Вернуться в магазин</a></p>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

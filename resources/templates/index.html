@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Магазины</title>
+  <link rel="icon" th:href="@{/images/favicon.ico}" />
+  <link rel="stylesheet" th:href="@{/css/index.css}" />
+</head>
+<body>
+<header class="app-header">
+  <nav class="container nav">
+    <a class="brand" th:href="@{/shops}">Journal</a>
+    <div class="spacer"></div>
+    <a class="link" th:href="@{/cart}">Корзина</a>
+    <a class="link" th:href="@{/profile}" th:if="${#authorization.expression('isAuthenticated()')}">Профиль</a>
+
+    <a class="btn" th:href="@{/login}" th:if="${!#authorization.expression('isAuthenticated()')}">Войти</a>
+    <form th:action="@{/logout}" method="post" th:if="${#authorization.expression('isAuthenticated()')}">
+      <button class="btn outline" type="submit">Выйти</button>
+    </form>
+  </nav>
+</header>
+
+<main class="container">
+  <h1>Магазины</h1>
+  <p>Маршрут <code>/shops</code> работает. Подключи сюда вывод данных из БД/сервиса.</p>
+
+  <div class="grid">
+    <article class="card">
+      <h3>Пример магазина</h3>
+      <p>Здесь может быть превью карточки.</p>
+      <a class="btn small" href="#">Перейти</a>
+    </article>
+  </div>
+</main>
+
+<footer class="app-footer">
+  <div class="container">© 2025 Journal</div>
+</footer>
+</body>
+</html>

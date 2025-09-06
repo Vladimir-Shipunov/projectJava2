@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Продукция</title>
+  <link rel="stylesheet" href="/index.css">
+</head>
+<body style="background-color: #111; color: white;">
+
+<header style="background-color: #162b40; padding: 20px; text-align: center;">
+  <h1>Список продукции</h1>
+  <nav>
+    <a href="/" class="btn btn-primary">Главная</a>
+
+  </nav>
+</header>
+
+<div class="container">
+
+  <section class="search-form">
+    <h2>Поиск продукции</h2>
+    <form action="/products/search" method="get">
+      <select name="searchType" required>
+        <option value="id">По ID</option>
+        <option value="name">По названию</option>
+        <option value="description">По описанию</option>
+        <option value="category">По категории</option>
+        <option value="price">По цене</option>
+      </select>
+      <input type="text" name="searchValue" placeholder="Введите значение">
+      <button class="btn btn-primary" type="submit">Найти</button>
+      <a href="/products" class="btn btn-warning">Сбросить</a>
+    </form>
+  </section>
+
+  <section class="add-form">
+    <h2>Добавить продукт</h2>
+    <form action="/products/add" method="post">
+      <input type="text" name="name" placeholder="Название" required>
+      <input type="text" name="description" placeholder="Описание" required>
+      <input type="number" name="price" step="0.01" placeholder="Цена" required>
+
+      <select name="categoryId" class="form-select" required>
+        <option value="">Выберите категорию</option>
+        <option th:each="c : ${categories}" th:value="${c.id}" th:text="${c.name}"></option>
+      </select>
+
+      <select name="manufacturerId" class="form-select" required>
+        <option value="">Выберите производителя</option>
+        <option th:each="m : ${manufacturers}" th:value="${m.id}" th:text="${m.name}"></option>
+      </select>
+
+      <button class="btn btn-success" type="submit">Добавить</button>
+    </form>
+  </section>
+
+  <section class="product-list">
+    <h2>Все товары</h2>
+
+    <div style="display: flex; flex-wrap: wrap; gap: 20px;">
+      <div th:each="p : ${products}" class="card" style="background: #1c1c1c; border-radius: 8px; padding: 15px; width: 300px;">
+        <p><strong>ID:</strong> [[${p.id}]]</p>
+        <p><strong>Название:</strong> [[${p.name}]]</p>
+        <p><strong>Описание:</strong> [[${p.description}]]</p>
+        <p><strong>Цена:</strong> [[${#numbers.formatDecimal(p.price, 1, 2)}]] ₽</p>
+        <p><strong>Категория:</strong> [[${p.category.name}]]</p>
+        <p><strong>Производитель:</strong> [[${p.manufacturer.name}]]</p>
+
+        <form action="/products/update" method="post" style="margin-top: 10px;">
+          <input type="hidden" name="id" th:value="${p.id}"/>
+          <input type="text" name="name" th:value="${p.name}" placeholder="Название" required/>
+          <input type="text" name="description" th:value="${p.description}" placeholder="Описание" required/>
+          <input type="number" step="0.01" name="price" th:value="${p.price}" placeholder="Цена" required/>
+
+          <select name="categoryId" class="form-select" required>
+            <option th:each="c : ${categories}" th:value="${c.id}" th:text="${c.name}"
+                    th:selected="${p.category != null} ? ${c.id} == ${p.category.id} : false"></option>
+          </select>
+
+          <select name="manufacturerId" class="form-select" required>
+            <option th:each="m : ${manufacturers}" th:value="${m.id}" th:text="${m.name}"
+                    th:selected="${p.manufacturer != null} ? ${m.id} == ${p.manufacturer.id} : false"></option>
+          </select>
+
+          <button class="btn btn-warning" type="submit">Обновить</button>
+        </form>
+
+        <form action="/products/delete" method="post" style="margin-top: 5px;">
+          <input type="hidden" name="id" th:value="${p.id}"/>
+          <button class="btn btn-danger" type="submit">Удалить</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer style="background-color: #162b40; padding: 20px; margin-top: 40px; text-align: center;">
+  <h2>Контакты</h2>
+  <p>Телефон: +7 (983) 101 8435</p>
+  <p>Адрес: г. Барнаул ул. Просторная д.228</p>
+  <p>Email: lsip_v.s.shipunov@mpt.ru</p>
+</footer>
+
+</body>
+</html>

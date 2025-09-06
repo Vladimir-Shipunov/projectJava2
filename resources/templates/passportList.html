@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Паспорта</title>
+  <link rel="stylesheet" href="/index.css">
+</head>
+<body style="background-color: #111; color: white;">
+
+<header style="background-color: #162b40; padding: 20px; text-align: center;">
+  <h1>Паспорта клиентов</h1>
+  <nav>
+    <a href="/" class="btn btn-primary">Главная</a>
+</header>
+
+<div class="container">
+
+  <section class="search-form">
+    <h2>Поиск по паспортам</h2>
+    <form action="/passports/search" method="get">
+      <select name="searchType" required>
+        <option value="id">По ID</option>
+        <option value="ownerName">По ФИО владельца</option>
+        <option value="passportNumber">По номеру</option>
+        <option value="issueDate">По дате выдачи</option>
+        <option value="issuedBy">По кем выдан</option>
+      </select>
+      <input type="text" name="searchValue" placeholder="Введите значение">
+      <button class="btn btn-primary" type="submit">Найти</button>
+      <a href="/passports" class="btn btn-warning">Сбросить</a>
+    </form>
+  </section>
+
+  <section class="add-form">
+    <h2>Добавить паспорт</h2>
+    <form action="/passports/add" method="post">
+      <input type="text" name="ownerName" placeholder="ФИО владельца" required>
+      <input type="text" name="passportNumber" placeholder="Номер паспорта" required>
+      <input type="text" name="issueDate" placeholder="Дата выдачи" required>
+      <input type="text" name="issuedBy" placeholder="Кем выдан" required>
+      <button class="btn btn-success" type="submit">Добавить</button>
+    </form>
+  </section>
+
+  <section class="passport-list">
+    <h2>Список паспортов</h2>
+
+    <div style="display: flex; flex-wrap: wrap; gap: 20px;">
+      <div th:each="p : ${passports}" class="card" style="background: #1c1c1c; border-radius: 8px; padding: 15px; width: 300px;">
+        <p><strong>ID:</strong> [[${p.id}]]</p>
+        <p><strong>ФИО:</strong> [[${p.ownerName}]]</p>
+        <p><strong>Номер:</strong> [[${p.passportNumber}]]</p>
+        <p><strong>Дата выдачи:</strong> [[${p.issueDate}]]</p>
+        <p><strong>Кем выдан:</strong> [[${p.issuedBy}]]</p>
+
+        <form action="/passports/update" method="post" style="margin-top: 10px;">
+          <input type="hidden" name="id" th:value="${p.id}"/>
+          <input type="text" name="ownerName" th:value="${p.ownerName}" placeholder="ФИО" required/>
+          <input type="text" name="passportNumber" th:value="${p.passportNumber}" placeholder="Номер" required/>
+          <input type="text" name="issueDate" th:value="${p.issueDate}" placeholder="Дата" required/>
+          <input type="text" name="issuedBy" th:value="${p.issuedBy}" placeholder="Кем выдан" required/>
+          <button class="btn btn-warning" type="submit">Обновить</button>
+        </form>
+
+        <form action="/passports/delete" method="post" style="margin-top: 5px;">
+          <input type="hidden" name="id" th:value="${p.id}"/>
+          <button class="btn btn-danger" type="submit">Удалить</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer style="background-color: #162b40; padding: 20px; margin-top: 40px; text-align: center;">
+  <h2>Контакты</h2>
+  <p>Телефон: +7 (983) 101 8435</p>
+  <p>Адрес: г. Барнаул ул. Просторная д.228</p>
+  <p>Email: lsip_v.s.shipunov@mpt.ru</p>
+</footer>
+
+</body>
+</html>

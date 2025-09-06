@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Корзина</title>
+    <link rel="stylesheet" href="/index.css">
+</head>
+<body style="background-color: #111; color: white;">
+
+<header style="background-color: #162b40; padding: 20px;">
+    <nav style="display: flex; justify-content: space-between; align-items: center;">
+        <a href="/shop" class="btn btn-primary">← Продолжить покупки</a>
+        <h1>Корзина покупок</h1>
+    </nav>
+</header>
+
+<div class="container">
+    <div th:if="${cartItems.empty}">
+        <div style="text-align: center; padding: 60px 0;">
+            <h2>Корзина пуста</h2>
+            <p>Добавьте товары из каталога</p>
+            <a href="/shop" class="btn btn-primary">Перейти к покупкам</a>
+        </div>
+    </div>
+
+    <div th:unless="${cartItems.empty}">
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 30px;">
+            <!-- Список товаров -->
+            <div>
+                <h2>Товары в корзине</h2>
+                <div th:each="item : ${cartItems}" 
+                     style="background: #1c1c1c; padding: 20px; border-radius: 8px; margin-bottom: 15px;">
+                    
+                    <div style="display: grid; grid-template-columns: 100px 1fr auto; gap: 15px; align-items: center;">
+                        <!-- Изображение -->
+                        <div th:if="${item.product.image != null}">
+                            <img th:src="'/shop/product/image/' + ${item.product.id}" 
+                                 style="width: 80px; height: 80px; object-fit: cover; border-radius: 5px;">
+                        </div>
+                        <div th:unless="${item.product.image != null}" 
+                             style="width: 80px; height: 80px; background: #2c2c2c; display: flex; align-items: center; justify-content: center; border-radius: 5px;">
+                            <span>Нет фото</span>
+                        </div>
+
+                        <!-- Информация -->
+                        <div>
+                            <h4 th:text="${item.product.name}"></h4>
+                            <p th:text="${#numbers.formatDecimal(item.product.price, 1, 2) + ' ₽'}"></p>
+                        </div>
+
+                        <!-- Управление количеством -->
+                        <div style="text-align: right;">
+                            <form th:action="@{/shop/cart/update}" method="post" style="display: flex; align-items: center; gap: 10px;">
+                                <input type="hidden" name="productId" th:value="${item.product.id}">
+                                <input type="number" name="quantity" th:value="${item.quantity}" min="1" 
+                                       style="width: 60px; padding: 5px;">
+                                <button type="submit" class="btn btn-warning">Обновить</button>
+                            </form>
+                            
+                            <form th:action="@{/shop/cart/remove}" method="post" style="margin-top: 5px;">
+                                <input type="hidden" name="productId" th:value="${item.product.id}">
+                                <button type="submit" class="btn btn-danger">Удалить</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 10px; text-align: right;">
+                        <strong>Сумма: 
+                            <span th:text="${#numbers.formatDecimal(item.product.price * item.quantity, 1, 2) + ' ₽'}"></span>
+                        </strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Итоговая информация -->
+            <div>
+                <div style="background: #1c1c1c; padding: 20px; border-radius: 8px; position: sticky; top: 20px;">
+                    <h2>Итого</h2>
+                    <div style="margin: 20px 0;">
+                        <p style="display: flex; justify-content: space-between;">
+                            <span>Товары:</span>
+                            <span th:text="${#numbers.formatDecimal(total, 1, 2) + ' ₽'}"></span>
+                        </p>
+                        <p style="display: flex; justify-content: space-between;">
+                            <span>Доставка:</span>
+                            <span>0 ₽</span>
+                        </p>
+                        <hr style="border-color: #333; margin: 15px 0;">
+                        <p style="display: flex; justify-content: space-between; font-size: 1.2em;">
+                            <strong>Общая сумма:</strong>
+                            <strong th:text="${#numbers.formatDecimal(total, 1, 2) + ' ₽'}"></strong>
+                        </p>
+                    </div>
+
+                    <div th:if="${@authService.isAuthenticated()}">
+                        <a href="/shop/checkout" class="btn btn-success" style="width: 100%;">
+                            Оформить заказ
+                        </a>
+                    </div>
+                    <div th:unless="${@authService.isAuthenticated()}">
+                        <p style="color: #e74c3c; margin-bottom: 15px;">
+                            Для оформления заказа необходимо войти в систему
+                        </p>
+                        <a href="/login" class="btn btn-primary" style="width: 100%; margin-bottom: 10px;">
+                            Войти
+                        </a>
+                        <a href="/register" class="btn btn-secondary" style="width: 100%;">
+                            Зарегистрироваться
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer style="background-color: #162b40; padding: 20px; margin-top: 40px; text-align: center;">
+    <h2>Контакты</h2>
+    <p>Телефон: +7 (983) 101 8435</p>
+    <p>Адрес: г. Барнаул ул. Просторная д.228</p>
+    <p>Email: lsip_v.s.shipunov@mpt.ru</p>
+</footer>
+
+</body>
+</html>

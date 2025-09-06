@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Заказ оформлен</title>
+    <link rel="stylesheet" href="/index.css">
+</head>
+<body style="background-color: #111; color: white;">
+
+<div style="max-width: 600px; margin: 100px auto; padding: 20px; text-align: center;">
+    <div style="background: #1c1c1c; padding: 40px; border-radius: 10px;">
+        <div style="color: #2ecc71; font-size: 4em; margin-bottom: 20px;">✓</div>
+        
+        <h1 style="margin-bottom: 20px;">Заказ успешно оформлен!</h1>
+        
+        <p style="color: #ccc; margin-bottom: 30px; line-height: 1.6;">
+            Ваш заказ №<strong th:text="${orderId}"></strong> принят в обработку.<br>
+            В ближайшее время с вами свяжется наш менеджер для подтверждения.
+        </p>
+        
+        <div style="background: #2c2c2c; padding: 20px; border-radius: 8px; margin-bottom: 30px;">
+            <h3 style="margin-bottom: 15px;">Детали заказа</h3>
+            <p><strong>Сумма:</strong> <span th:text="${#numbers.formatDecimal(total, 1, 2) + ' ₽'}"></span></p>
+            <p><strong>Способ доставки:</strong> <span th:text="${deliveryType}"></span></p>
+            <p><strong>Статус:</strong> <span style="color: #f39c12;">В обработке</span></p>
+        </div>
+        
+        <div style="display: flex; gap: 15px; justify-content: center;">
+            <a href="/shop" class="btn btn-primary">Вернуться в магазин</a>
+            <a th:href="@{/shop/order/} + ${orderId}" class="btn btn-secondary">Посмотреть заказ</a>
+        </div>
+        
+        <p style="margin-top: 30px; color: #999;">
+            На вашу почту отправлено письмо с подтверждением заказа
+        </p>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${product.name}">Товар</title>
+    <link rel="stylesheet" href="/index.css">
+</head>
+<body style="background-color: #111; color: white;">
+
+<header style="background-color: #162b40; padding: 20px;">
+    <nav style="display: flex; justify-content: space-between; align-items: center;">
+        <a href="/shop" class="btn btn-primary">← Назад в магазин</a>
+        <div>
+            <a href="/shop/cart" class="btn btn-warning">Корзина</a>
+            <a th:if="${@authService.hasRole('ADMIN')}" 
+               th:href="@{/admin/products/edit/} + ${product.id}" 
+               class="btn btn-warning">Редактировать</a>
+        </div>
+    </nav>
+</header>
+
+<div class="container">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin: 40px 0;">
+        <!-- Изображение товара -->
+        <div>
+            <div th:if="${product.image != null}">
+                <img th:src="'/shop/product/image/' + ${product.id}" 
+                     style="width: 100%; max-height: 400px; object-fit: cover; border-radius: 10px;"
+                     alt="Product Image">
+            </div>
+            <div th:unless="${product.image != null}" 
+                 style="height: 400px; background: #2c2c2c; display: flex; align-items: center; justify-content: center; border-radius: 10px;">
+                <span>Нет изображения</span>
+            </div>
+        </div>
+
+        <!-- Информация о товаре -->
+        <div>
+            <h1 th:text="${product.name}" style="margin-bottom: 20px;"></h1>
+            <p style="font-size: 1.5em; color: #2ecc71; margin-bottom: 20px;">
+                <strong th:text="${#numbers.formatDecimal(product.price, 1, 2) + ' ₽'}"></strong>
+            </p>
+            
+            <div style="margin-bottom: 20px;">
+                <h3>Описание</h3>
+                <p th:text="${product.description}" style="color: #ccc; line-height: 1.6;"></p>
+            </div>
+
+            <div style="margin-bottom: 20px;">
+                <p><strong>Категория:</strong> <span th:text="${product.category.name}"></span></p>
+                <p><strong>Производитель:</strong> <span th:text="${product.manufacturer.name}"></span></p>
+            </div>
+
+            <!-- Форма добавления в корзину -->
+            <form th:action="@{/shop/cart/add}" method="post" style="background: #1c1c1c; padding: 20px; border-radius: 8px;">
+                <input type="hidden" name="productId" th:value="${product.id}">
+                
+                <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
+                    <label for="quantity">Количество:</label>
+                    <input type="number" id="quantity" name="quantity" value="1" min="1" 
+                           style="width: 80px; padding: 10px;">
+                    
+                    <button type="submit" class="btn btn-success" style="flex: 1;">
+                        Добавить в корзину
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<footer style="background-color: #162b40; padding: 20px; margin-top: 40px; text-align: center;">
+    <h2>Контакты</h2>
+    <p>Телефон: +7 (983) 101 8435</p>
+    <p>Адрес: г. Барнаул ул. Просторная д.228</p>
+    <p>Email: lsip_v.s.shipunov@mpt.ru</p>
+</footer>
+
+</body>
+</html>

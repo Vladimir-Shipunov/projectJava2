@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Главная страница</title>
+  <link rel="stylesheet" href="/index.css">
+</head>
+<body style="background-color: #111; color: white;">
+
+  <h1>Добро пожаловать в систему управления!</h1>
+<div class="container">
+        <h1>Добро пожаловать в систему учета</h1>
+        <p>Выберите раздел для работы:</p>
+
+        <div class="actions">
+            <a th:href="@{/orders}" class="btn btn-primary">Заказы</a>
+            <a th:href="@{/payments}" class="btn btn-success">Платежи</a>
+            <a th:href="@{/deliveries}" class="btn btn-warning">Доставки</a>
+            <a th:href="@{/manufacturers}" class="btn btn-primary">Производители</a>
+            <a th:href="@{/passports}" class="btn btn-success">Паспорта</a>
+            <a th:href="@{/products}" class="btn btn-warning">Товары</a>
+            <a th:href="@{/categories}" class="btn btn-primary">Категории</a>
+            <a th:href="@{/roles}" class="btn btn-success">Роли</a>
+            <a th:href="@{/users}" class="btn btn-danger">Пользователи</a>
+        </div>
+    </div>
+
+<footer style="background-color: #162b40; padding: 20px; margin-top: 40px; text-align: center;">
+  <h2>Контакты</h2>
+  <p>Телефон: +7 (983) 101 8435</p>
+  <p>Адрес: г. Барнаул ул. Просторная д.228</p>
+  <p>Email: lsip_v.s.shipunov@mpt.ru</p>
+</footer>
+
+</body>
+</html>
